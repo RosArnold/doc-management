@@ -3,13 +3,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "./slice";
 import authReducer from "./authSlice";
-// import documentReducer from "./documentSlice";
+import documentReducer from "./docSlice";
+import folderReducer from "./folderSlice";
 
 const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     auth: authReducer,
-    // document: documentReducer,
+    document: documentReducer,
+    folder: folderReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),

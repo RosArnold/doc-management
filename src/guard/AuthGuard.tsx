@@ -1,30 +1,25 @@
 import React, { ReactNode, useEffect } from "react";
-import { Route, useLocation, useNavigate } from "react-router-dom";
-
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useNavigate } from "react-router-dom";
 
 interface PrivateRouteProps {
-  path: string;
   children: ReactNode;
 }
 
-const authPaths = ["/login", "/logout"];
-
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, ...rest }) => {
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  const isAuthenticated = !!localStorage.getItem("token");
+  // useSelector(
+  //   (state: RootState) => state.auth.isAuthenticated
+  // );
 
-  if (!isAuthenticated && !authPaths.includes(location.pathname)) {
-    navigate("/login"); // Redirect to login page if not authenticated
-    return null; // Return null to avoid rendering the route
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
-  return <Route {...rest}>{children}</Route>;
+  return <React.Fragment {...rest}>{children}</React.Fragment>;
 };
 
 export default PrivateRoute;
